@@ -1,0 +1,23 @@
+{
+  "welcomeMsg" : "",
+  "firstTask" : "initTask",
+  "tasks" : [
+    {
+      "id" : "initTask",
+      "initMsg" : "initMsg",
+      "expectedResult" : "expectedResult",
+      "finalMsg" : "finalMsg",
+      "helpMsg" :"helpMsg"
+    }
+  ],
+  "cheerUp": {
+    "text" : [],
+    "stickers" : [],
+    "audio" : []
+  },
+  "depress": {
+    "text" : [],
+    "stickers" : [],
+    "audio" : []
+  }
+}
