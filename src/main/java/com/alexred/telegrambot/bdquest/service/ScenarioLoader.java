@@ -1,31 +1,30 @@
-package service;
+package com.alexred.telegrambot.bdquest.service;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import entity.GameTask;
-import entity.Scenario;
+import com.alexred.telegrambot.bdquest.entity.GameTask;
+import com.alexred.telegrambot.bdquest.entity.Scenario;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ScenarioLoader {
 
     private static final String WELCOME_MSG_PROP = "welcomeMsg";
     private static final String TASKS_PROP = "tasks";
-    private static final String FIRST_TASK_PROP = "firstTask";
     private static final String ID_PROP = "id";
     private static final String INIT_MSG_PROP = "initMsg";
+    private static final String INIT_TASK_PROP = "initTask";
     private static final String EXPECTED_RESULT_PROP = "expectedResult";
-    private static final String FINAL_MSG_PROP = "finalMsg";
     private static final String HELP_MSG_PROP = "helpMsg";
-    private static final String CHEERUP_PROP = "cheerUp";
-    private static final String DEPRESS_PROP = "depress";
-    private static final String TEXT_PROP = "text";
-    private static final String STICKERS_PROP = "stickers";
-    private static final String AUDIO_PROP = "audio";
+    private static final String NEXT_ID_PROP= "nextId";
+    private static final String DEPRESS_TEXT_PROP = "depressText";
+    private static final String DEPRESS_STICKERS_PROP = "depressStickers";
 
     public Scenario readScenario (String location) {
         Scenario scenario = null;
@@ -46,27 +45,44 @@ public class ScenarioLoader {
     }
 
     private Scenario fillScenarioFromJson (JsonObject jsonObject) {
-        final Scenario scenario = new Scenario();
+        Scenario scenario = new Scenario();
         scenario.setWelcomeMsg(jsonObject.get(WELCOME_MSG_PROP).getAsString());
-        scenario.setFirstTaskId(jsonObject.get(FIRST_TASK_PROP).getAsString());
         JsonArray tasks = jsonObject.getAsJsonArray(TASKS_PROP);
         tasks.forEach((i) -> {
             JsonObject task = i.getAsJsonObject();
-            if (task != null && task instanceof JsonObject) {
+            if (task != null) {
                 scenario.addTask(getTaskFromJson(task));
             }
         });
+        JsonArray depressText = jsonObject.getAsJsonArray(DEPRESS_TEXT_PROP);
+        JsonArray depressStickers = jsonObject.getAsJsonArray(DEPRESS_STICKERS_PROP);
+
+        scenario.setDepressPhrases(getStringListFromJsonArray(depressText));
+        scenario.setDepressStickers(getStringListFromJsonArray(depressStickers));
+        scenario.setFirstTask(scenario.getTask(jsonObject.get(INIT_TASK_PROP).getAsString()));
 
         return scenario;
     }
+
 
     private GameTask getTaskFromJson (JsonObject jsonObject) {
         String id = getJsonStringField(jsonObject, ID_PROP);
         String initMsg = getJsonStringField(jsonObject, INIT_MSG_PROP);
         String expectedResult = getJsonStringField(jsonObject, EXPECTED_RESULT_PROP);
-        String finalMsg = getJsonStringField(jsonObject, FINAL_MSG_PROP);
         String helpMsg = getJsonStringField(jsonObject, HELP_MSG_PROP);
-        return new GameTask(id, initMsg, expectedResult, finalMsg, helpMsg);
+        String nextId = getJsonStringField(jsonObject, NEXT_ID_PROP);
+        return new GameTask(id, initMsg, expectedResult, helpMsg, nextId);
+    }
+
+    private List<String> getStringListFromJsonArray (JsonArray array) {
+        List <String> list = new ArrayList<>();
+        if (array != null) {
+            array.forEach((i) -> {
+                String val = i.getAsString();
+                list.add(val);
+            });
+        }
+        return list;
     }
 
     private String getJsonStringField (JsonObject jsonObject, String fieldName) {

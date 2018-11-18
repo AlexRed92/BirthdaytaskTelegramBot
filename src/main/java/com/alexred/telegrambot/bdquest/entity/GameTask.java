@@ -1,22 +1,22 @@
-package entity;
+package com.alexred.telegrambot.bdquest.entity;
 
 public class GameTask {
 
     private String id;
     private String initMsg;
     private String expectedResult;
-    private String finalMsg;
     private String helpMsg;
+    private String nextTaskId;
 
     public GameTask() {
     }
 
-    public GameTask(String id, String initMsg, String expectedResult, String finalMsg, String helpMsg) {
+    public GameTask(String id, String initMsg, String expectedResult, String helpMsg, String nextTaskId) {
         this.id = id;
         this.initMsg = initMsg;
         this.expectedResult = expectedResult;
-        this.finalMsg = finalMsg;
         this.helpMsg = helpMsg;
+        this.nextTaskId = nextTaskId;
     }
 
     public String getId() {
@@ -43,19 +43,19 @@ public class GameTask {
         this.expectedResult = expectedResult;
     }
 
-    public String getFinalMsg() {
-        return finalMsg;
-    }
-
-    public void setFinalMsg(String finalMsg) {
-        this.finalMsg = finalMsg;
-    }
-
     public String getHelpMsg() {
         return helpMsg;
     }
 
     public void setHelpMsg(String helpMsg) {
         this.helpMsg = helpMsg;
+    }
+
+    public String getNextTaskId() {
+        return nextTaskId;
+    }
+
+    public void setNextTaskId(String nextTaskId) {
+        this.nextTaskId = nextTaskId;
     }
 }

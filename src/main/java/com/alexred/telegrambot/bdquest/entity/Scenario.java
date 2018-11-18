@@ -1,22 +1,21 @@
-package entity;
+package com.alexred.telegrambot.bdquest.entity;
 
 import org.apache.commons.lang3.StringUtils;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class Scenario {
 
     private String welcomeMsg;
-    private String firstTaskId;
+    private GameTask firstTask;
     private Map<String, GameTask> tasksMap;
-    List<String> cheerUpPhrases;
+    private List<String> depressStickers;
+    private List<String> depressPhrases;
 
     public Scenario() {
-        tasksMap = new HashMap<String, GameTask>();
-        cheerUpPhrases = new ArrayList<>();
+        tasksMap = new HashMap<>();
+        depressStickers = new ArrayList<>();
+        depressPhrases = new ArrayList<>();
     }
 
     public void addTask (GameTask task) {
@@ -38,17 +37,12 @@ public class Scenario {
 
     public GameTask getNextTask (GameTask currentTask) {
         if (currentTask != null) {
-            String nextId = currentTask.getId();
-            if (StringUtils.isNotBlank(nextId)) {
-                return tasksMap.get(nextId);
+            GameTask next = tasksMap.get(currentTask.getNextTaskId());
+            if (next != null) {
+                return next;
             }
         }
         return null;
-    }
-
-    //TODO: create validation
-    public boolean isValid () {
-        return true;
     }
 
     public GameTask getNextTask (String currentId) {
@@ -56,6 +50,11 @@ public class Scenario {
             return getNextTask(tasksMap.get(currentId));
         }
         return null;
+    }
+
+    // TODO: create validation
+    public boolean isValid () {
+        return true;
     }
 
     public String getWelcomeMsg() {
@@ -66,11 +65,27 @@ public class Scenario {
         this.welcomeMsg = welcomeMsg;
     }
 
-    public String getFirstTaskId() {
-        return firstTaskId;
+    public List<String> getDepressStickers() {
+        return depressStickers;
     }
 
-    public void setFirstTaskId(String firstTaskId) {
-        this.firstTaskId = firstTaskId;
+    public void setDepressStickers(List<String> depressStickers) {
+        this.depressStickers = depressStickers;
+    }
+
+    public List<String> getDepressPhrases() {
+        return depressPhrases;
+    }
+
+    public void setDepressPhrases(List<String> depressPhrases) {
+        this.depressPhrases = depressPhrases;
+    }
+
+    public GameTask getFirstTask() {
+        return firstTask;
+    }
+
+    public void setFirstTask(GameTask firstTask) {
+        this.firstTask = firstTask;
     }
 }
